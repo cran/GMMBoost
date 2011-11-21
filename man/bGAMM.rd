@@ -37,7 +37,7 @@ bGAMM(fix=formula, add=formula, rnd=formula,
   \item{control}{a list of control values for the estimation algorithm to replace the default values returned by the function \code{bGAMMControl}. Defaults to an empty list.}
 }
 \value{Generic functions such as \code{print}, \code{predict}, \code{summary} and \code{plot} have methods to show the results of the fit. 
-The \code{predict} function uses also estimates of random effects for prediction, if possible (i.e. for known subjects of the grouping factor)
+The \code{predict} function uses also estimates of random effects for prediction, if possible (i.e. for known subjects of the grouping factor).
 The \code{plot} function shows the estimated smooth functions. Single functions can be specified by a suitable vector in the \code{which} argument. 
 Default is \code{which=Null} and all smooth functions (up to a maximum of nine) are shown.
 

@@ -982,13 +982,12 @@ if(s>1)
 control$q_start<-diag(control$q_start)
 }
 
+index<-seq(from=1,to=(kat-1)*(length(katvar)+1),by=length(katvar)+1)
 if(is.null(control$start))
 {
 control$start<-rep(0,(dim(X)[2]+dim(W)[2]))
 if(model=="cumulative")
 {
-index<-seq(from=1,to=(kat-1)*(length(katvar)+1),by=length(katvar)+1)
-lin.test<-(kat-1)*(length(katvar)+1)
 control$start[index]<-c(1:length(index))
 control$start[index]<-control$start[index]-mean(control$start[index])
 }}
@@ -1160,6 +1159,7 @@ for (r in 1:m)
 ########## Check order restriction
 if (model=="cumulative")
 {
+lin.test<-(kat-1)*(length(katvar)+1)
 for (ij in 0:100)
 {
 Test_delta<-Delta[1,1:lin.test]+(0.5)^(ij)*Delta_r[[r]][1:lin.test]
@@ -1619,15 +1619,14 @@ cat("Warning:\n")
 cat("Final Fisher scoring reestimation did not converge!")
 }}
 
-Delta_neu2<-Delta_neu
-Delta_neu2[c(aaa,rep(T,n*s))]<-glmm_final$Delta
+Delta_neu[c(aaa,rep(T,n*s))]<-glmm_final$Delta
 
 Standard_errors<-rep(0,length(Delta_neu))
 Standard_errors[c(aaa,rep(T,n*s))]<-glmm_final$Standard_errors
 
 Qfinal<-glmm_final$Q
 
-Eta_opt<-Z_alles%*%Delta_neu2
+Eta_opt<-Z_alles%*%Delta_neu
 Mu_opt<-as.vector(family$linkinv(Eta_opt))
 
 if(s==1)
