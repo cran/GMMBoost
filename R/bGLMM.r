@@ -1,12 +1,29 @@
 #############################################################################################################################################               
 ###################################################### main boosting function #################################################################
 est.bGLMM<-function(fix,rnd,data,family=gaussian(link = "identity"),control=list())
-{                      
+{    
+very.old.names<-attr(terms(fix),"term.labels")
+
 y <- model.response(model.frame(fix, data))
 
 X <- model.matrix(fix, data)
 
-very.old.names<-attr(terms(fix),"term.labels")
+if(dim(X)[2]==1 || (dim(X)[2]==2 && colnames(X)[1]=="(Intercept)"))
+stop("No terms to select! Use glmer, glmmPQL or glmmML!")
+
+
+if(all(substr(very.old.names,1,9)!="as.factor"))
+very.old.names<-colnames(X)[colnames(X)!="(Intercept)"]
+
+fix.part<-very.old.names[1]
+if(length(very.old.names)>1)
+{
+for(iu in 2:length(very.old.names))
+fix.part<-paste(fix.part,very.old.names[iu],sep=" + ")
+}
+fix<-formula(paste("y~",fix.part,sep=" "))
+
+
 factor.names<-character()
 for (i in 1:length(very.old.names))
 {
@@ -141,16 +158,26 @@ if (all (X==0))
 X<-rep(1,N)
 X<-as.matrix(X)
 }
+
 # add Intercept 
+warn.ind<-FALSE
+
 if (!all (X[,1]==1))
+{
+warn.ind<-TRUE
 X<-cbind(1,X)
+colnames(X)[1]<-"(Intercept)"
+old.names<-c("(Intercept)",old.names)
+}
 
 Z_fastalles<-X
 
 no.sel<-is.element(attr(X,"dimnames")[[2]],control$lin)
 
-U<-X[,!no.sel]
+U<-as.matrix(X[,!no.sel])
+colnames(U)<-old.names[!no.sel]
 X<-as.matrix(X[,no.sel])
+colnames(X)<-old.names[no.sel]
 
 lin<-length(control$lin)
 
@@ -849,6 +876,11 @@ comp<-character()
 for(oi in 1:length(komp))
 comp<-c(comp,very.old.names[komp[oi]])
 
+if(warn.ind)
+{cat("Warning:\n")
+cat("Intercept has to be incorporated and is added!\n")}
+
+
 ret.obj=list()
 ret.obj$IC<-IC
 ret.obj$IC_sel<-IC_stop
@@ -926,7 +958,7 @@ print(x$call)
 cat("\n")
 cat("\nFixed Effects:\n")
 cat("\nCoefficients:\n")
-printCoefmat(x$coefficients, P.value=TRUE, has.Pvalue=TRUE)
+printCoefmat(x$coefficients, P.values=TRUE, has.Pvalue=TRUE)
 cat("\nRandom Effects:\n")
 cat("\nStdDev:\n")
 print(x$StdDev)
@@ -986,13 +1018,13 @@ W<-cbind(W,W_start[,seq(from=i,to=i+(s-1)*n,by=n)])
 }else{
 W<-W_start
 }
-y<- as.vector(family$linkinv(X%*%object$coef))
+y<- as.vector(family$linkinv(X[,is.element(colnames(X),names(object$coef))]%*%object$coef[is.element(names(object$coef),colnames(X))]))
 rand.ok<-is.element(newdata[,object$subject],subj.ok)
 W.neu<-W[,subj.test]
-y[rand.ok]<- family$linkinv(cbind(X,W.neu)[rand.ok,]%*%c(object$coef,object$ranef[match(colnames(W.neu),names(object$ranef))]))
+y[rand.ok]<- family$linkinv(cbind(X[,is.element(colnames(X),names(object$coef))],W.neu)[rand.ok,]%*%c(object$coef[is.element(names(object$coef),colnames(X))],object$ranef[match(colnames(W.neu),names(object$ranef))]))
 }else{
 W<-NULL
-y<- as.vector(family$linkinv(X%*%object$coef))
+y<- as.vector(family$linkinv(X[,is.element(colnames(X),names(object$coef))]%*%object$coef[is.element(names(object$coef),colnames(X))]))
 }
 }
 y

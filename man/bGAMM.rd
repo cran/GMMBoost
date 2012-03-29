@@ -68,7 +68,7 @@ Andreas Groll \email{andreas.groll@stat.uni-muenchen.de}
 }
 
 \references{
-Groll, A. and G. Tutz (2011). Regularization for Generalized Additive Mixed Models by Likelihood-Based Boosting. 
+Groll, A. and G. Tutz (2012). Regularization for Generalized Additive Mixed Models by Likelihood-Based Boosting. 
 \emph{Methods of Information in Medicine.} To appear.
 }
 
