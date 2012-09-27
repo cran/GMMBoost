@@ -53,9 +53,6 @@ Andreas Groll \email{andreas.groll@stat.uni-muenchen.de}
 }
 
 \references{
-Tutz, G. and A. Groll (2011). Binary and ordinal random effects models including variable
-selection. Technical Report \bold{97}, Ludwig-Maximilians-University.
-
 Tutz, G. and A. Groll (2012). Likelihood-based boosting in binary and ordinal random effects models. 
 \emph{Journal of Computational and Graphical Statistics}. To appear.
 }
@@ -71,7 +68,7 @@ data(knee)
 # fit a sequential model
 
 glm1 <- OrdinalBoost(pain ~ time + th + age + sex, rnd = list(id=~1),
-        data = knee, model = "sequential", control = list(steps=5))
+        data = knee, model = "sequential", control = list(steps=3))
 
 # see also demo("OrdinalBoost-knee")
 }              

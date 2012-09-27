@@ -76,14 +76,14 @@ lm1 <- bGLMM(points ~ transfer.spendings + I(transfer.spendings^2)
 lm2 <- bGLMM(points~transfer.spendings + I(transfer.spendings^2)
        + ave.unfair.score + transfer.receits + ball.possession
        + tackles + ave.attend + sold.out, rnd = list(team=~1 + ave.attend), 
-       data = soccer, control = list(steps=100, lin="ave.attend", method="REML",
+       data = soccer, control = list(steps=50, lin="ave.attend", method="REML",
        nue=1, sel.method="bic"))
 
 ## linear mixed models with categorical covariates
 lm3 <- bGLMM(points ~ transfer.spendings + I(transfer.spendings^2)
        + as.factor(red.card) + as.factor(yellow.red.card) 
        + transfer.receits + ball.possession + tackles + ave.attend
-       + sold.out, rnd = list(team=~1), data = soccer)
+       + sold.out, rnd = list(team=~1), data = soccer, control = list(steps=50))
 
 
 ## generalized linear mixed model

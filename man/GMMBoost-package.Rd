@@ -11,8 +11,8 @@ Likelihood-based Boosting for Generalized mixed models
 \tabular{ll}{
 Package: \tab GMMBoost\cr
 Type: \tab Package\cr
-Version: \tab 1.0.2\cr
-Date: \tab 2012-03-29\cr
+Version: \tab 1.0.3\cr
+Date: \tab 2012-09-27\cr
 License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }

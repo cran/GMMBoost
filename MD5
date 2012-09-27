@@ -1,4 +1,4 @@
-94c606d62cf697d8e3944b7acffb669e *DESCRIPTION
+a20a9b6a6676bb30ff75a30c718a2011 *DESCRIPTION
 a1c6b1c876493dc697b1294161cf2387 *NAMESPACE
 7e5115c5f72cf23f5bc4d8b2d5e15653 *R/OrdinalBoost.r
 8fe4be36e2f5e2cb9c58a423d38eef5c *R/OrdinalBoostControl.r
@@ -11,12 +11,12 @@ c58f41427b397e3dcf0d253af267875b *data/soccer.RData
 762aba393577cda25739fd8e57a5b94b *demo/00Index
 490ae032ffc659b5a8e28bf256e50014 *demo/OrdinalBoost-knee.r
 6f723177dca6c17f432fb2df0a92588e *demo/bGAMM-soccer.r
-16a457465c71ab8599a480f2bcaf2dca *man/GMMBoost-package.Rd
-397e8507743d20d28357fe99442cdeb9 *man/OrdinalBoost.rd
+ae89067af61f32fb3d4fd6a842356788 *man/GMMBoost-package.Rd
+5b0cc4051073b92da096c47ecd897799 *man/OrdinalBoost.rd
 2f9cde35b5a4ca275eb4981bddcdedec *man/OrdinalBoostControl.rd
-c304195f3578af69ac404cec85812311 *man/bGAMM.rd
+dd38deae9cf6280a8078af4eb36e3e62 *man/bGAMM.rd
 c647a1eac90b0f6981b63a15d57c69cf *man/bGAMMControl.rd
-059407cf7d50db559908d8a559eac89e *man/bGLMM.rd
+b9cbf098b6c9214eae5abf4cddcab288 *man/bGLMM.rd
 847a54b288d37c681f77259a371b23cb *man/bGLMMControl.rd
 4ee324cf4d235204b4dfa44003c13a28 *man/knee.Rd
 653f0568efab148c3a2cfa164a83c253 *man/soccer.Rd
