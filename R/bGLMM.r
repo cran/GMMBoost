@@ -1,3 +1,240 @@
+##################### likelihood function for the optimization with bobyqa ###############
+likelihood_bobyqa<-function(Q_breslow,D,Sigma,X,X_aktuell,Eta_tilde,Betadach,W,n)
+{
+  Q_breslow<-Q_breslow^2
+  
+  likeliparam<-1000
+  mitte<-rep(0,likeliparam)
+  randli<-rep(0,likeliparam-1)
+  randre<-rep(0,likeliparam-1)
+  krit<-TRUE
+  
+  V<-(diag(1/(D*1/Sigma*D))+W%*%(t(W)*rep(Q_breslow,n)))
+  
+  VVV_tilde<-det(V)
+  if(VVV_tilde==0 || VVV_tilde==Inf || VVV_tilde==-Inf)
+  {
+    
+    max_V_tilde<-max(V)
+    V_tilde<-V/max_V_tilde
+    mean_V_tilde<-max_V_tilde
+    
+    V_tilde1<-V_tilde
+    V_tilde2<-matrix(c(18,0,0,1),2,2)
+    
+    if(det(V_tilde)==0 || det(V_tilde)==Inf || det(V_tilde)==-Inf)
+    {
+      min_V_tilde<-min(V[V!=0])
+      V_tilde<-V/min_V_tilde
+      mean_V_tilde<-min_V_tilde
+      V_tilde2<-V_tilde
+    }
+    
+    
+    if(det(V_tilde1)==0 & det(V_tilde2)==0)
+      min_V_tilde<-0.001
+    
+    VVV_tilde<-det(V_tilde)
+    if(VVV_tilde==0 || VVV_tilde==Inf || VVV_tilde==-Inf)
+    {
+      mitte[1]<-min_V_tilde+0.5*(max_V_tilde-min_V_tilde)
+      V_tilde<-V/mitte[1]
+      mean_V_tilde<-mitte[1]
+    }
+    
+    VVV_tilde<-det(V_tilde)
+    if(VVV_tilde==0 || VVV_tilde==Inf || VVV_tilde==-Inf)
+    {
+      krit<-FALSE
+      
+      if(det(V/mitte[1])==det(V/min_V_tilde))
+      {
+        randli[1]<-mitte[1]
+        randre[1]<-max_V_tilde
+        mitte[2]<-mitte[1]+0.5*(randre[1]-randli[1])
+      }
+      if(det(V/mitte[1])==det(V/max_V_tilde))
+      {
+        randli[1]<-min_V_tilde
+        randre[1]<-mitte[1]
+        mitte[2]<-mitte[1]-0.5*(randre[1]-randli[1])
+      }
+      V_tilde<-V/mitte[2]
+      mean_V_tilde<-mitte[2]
+      VVV_tilde<-det(V_tilde)
+      if(VVV_tilde==0 || VVV_tilde==Inf || VVV_tilde==-Inf)
+      {
+        krit<-FALSE
+      }
+      else
+      {
+        krit<-TRUE
+      }
+    }
+    
+    j<-2
+    while(!krit & j<likeliparam+1)
+    {
+      if(det(V/mitte[j])==det(V/randli[j-1]))
+      {
+        randli[j]<-mitte[j]
+        randre[j]<-randre[j-1]
+        mitte[j+1]<-mitte[j]+0.5*(randre[j]-randli[j])
+      }
+      if(det(V/mitte[j])==det(V/randre[j-1]))
+      {
+        randli[j]<-randli[j-1]
+        randre[j]<-mitte[j]
+        mitte[j+1]<-mitte[j]-0.5*(randre[j]-randli[j])
+      }
+      V_tilde<-V/mitte[j+1]
+      mean_V_tilde<-mitte[j+1]
+      VVV_tilde<-det(V_tilde)
+      if(VVV_tilde==0 || VVV_tilde==Inf || VVV_tilde==-Inf)
+      {
+        krit<-FALSE
+      }
+      else
+      {
+        krit<-TRUE
+      }
+      j<-j+1
+    }
+    
+    likeli<- -0.5*((ncol(V_tilde)-ncol(X_aktuell))*log(mean_V_tilde)+log(VVV_tilde)+log(det(t(X_aktuell)%*%chol2inv(chol(V_tilde))%*%X_aktuell))+t(Eta_tilde-X%*%Betadach)%*%chol2inv(chol(V))%*%(Eta_tilde-X%*%Betadach))
+  }else{
+    likeli<- -0.5*(log(det(V))+log(det(t(X_aktuell)%*%chol2inv(chol(V))%*%X_aktuell))+t(Eta_tilde-X%*%Betadach)%*%chol2inv(chol(V))%*%(Eta_tilde-X%*%Betadach))
+  }
+  
+  ret.obj<- -likeli
+  return(ret.obj)
+}
+
+###########
+
+likelihood<-function(q_vec,D,Sigma,X,X_aktuell,Eta_tilde,Betadach,W,n,s,k)
+{
+  Q_breslow1<-matrix(0,s,s)
+  Q_breslow1[lower.tri(Q_breslow1)]<-q_vec[(s+1):(s*(s+1)*0.5)]
+  Q_breslow1<-Q_breslow1+t(Q_breslow1)
+  diag(Q_breslow1)<-(q_vec[1:s])
+  
+  if(all (eigen(Q_breslow1)$values>0))
+  {
+    Q_breslow<-matrix(0,n*s,n*s)
+    for (i in 1:n)
+      Q_breslow[((i-1)*s+1):(i*s),((i-1)*s+1):(i*s)]<-Q_breslow1
+    
+    V<-(diag(1/(D*1/Sigma*D))+W%*%Q_breslow%*%t(W))
+       
+    VVV_tilde<-det(V)
+    if(VVV_tilde==0 || VVV_tilde==Inf || VVV_tilde==-Inf)
+    {
+      
+      
+      determ<-rep(0,n)
+      determ[1]<-det(V[(1:k[1]),(1:k[1])])
+      
+      for (i in 2:n)
+        determ[i]<-det(V[(sum(k[1:(i-1)])+1):(sum(k[1:i])),(sum(k[1:(i-1)])+1):(sum(k[1:i]))])
+      
+      
+      norm_determ<-min(determ[determ!=0])
+      determ_gross<-prod((1/norm_determ)*determ)
+      deti_max<-determ_gross
+      ##########
+      mitte<-rep(0,1000)
+      randli<-rep(0,999)
+      randre<-rep(0,999)
+      deti<-rep(0,1000)
+      krit<-TRUE
+      
+      if (determ_gross==0 || determ_gross==Inf || determ_gross==-Inf)
+      {
+        norm_determ<-max(determ)
+        determ_gross<-prod((1/norm_determ)*determ)
+        deti_min<-determ_gross
+      }
+      
+      
+      if (determ_gross==0 || determ_gross==Inf || determ_gross==-Inf)
+      {
+        mitte[1]<-min(determ)+0.5*(max(determ)-min(determ))
+        norm_determ<-mitte[1]
+        deti[1]<-prod((1/norm_determ)*determ)
+        determ_gross<-deti[1]
+      }
+      
+      
+      
+      if(determ_gross==0 || determ_gross==Inf || determ_gross==-Inf)
+      {
+        krit<-FALSE
+        
+        if(deti[1]==deti_min)
+        {
+          randli[1]<-min(determ)
+          randre[1]<-mitte[1]
+          mitte[2]<-mitte[1]-0.5*(randre[1]-randli[1])
+          deti_min<-deti[1]
+        }
+        if(deti[1]==deti_max)
+        {
+          randli[1]<-mitte[1]
+          randre[1]<-max(determ)
+          mitte[2]<-mitte[1]+0.5*(randre[1]-randli[1])
+          deti_max<-deti[1]
+        }
+        norm_determ<-mitte[2]
+        deti[2]<-prod((1/norm_determ)*determ)
+        determ_gross<-deti[2]
+        if(deti[2]==0 || deti[2]==Inf || deti[2]==-Inf)
+        {
+          krit<-FALSE
+        }else{
+          krit<-TRUE
+        }
+      }
+      
+      j<-2
+      while(!krit & j<1001)
+      {
+        if(deti[j]==deti_min)
+        {
+          randli[j]<-randli[j-1]
+          randre[j]<-mitte[j]
+          mitte[j+1]<-mitte[j]-0.5*(randre[j]-randli[j])
+          deti_min<-deti[j]
+        }
+        if(deti[j]==deti_max)
+        {
+          randli[j]<-mitte[j]
+          randre[j]<-randre[j-1]
+          mitte[j+1]<-mitte[j]+0.5*(randre[j]-randli[j])
+          deti_max<-deti[j]
+        }
+        norm_determ<-mitte[j+1]
+        deti[j+1]<-prod((1/norm_determ)*determ)
+        determ_gross<-deti[j+1]
+        if(deti[j+1]==0 || deti[j+1]==Inf || deti[j+1]==-Inf)
+        {
+          krit<-FALSE
+        }else{
+          krit<-TRUE
+        }
+        j<-j+1
+      }
+      
+      likeli<- -0.5*(n*log(norm_determ)+log(determ_gross)+(log(det(t(X_aktuell)%*%chol2inv(chol(V))%*%X_aktuell))+t(Eta_tilde-X%*%Betadach)%*%chol2inv(chol(V))%*%(Eta_tilde-X%*%Betadach)))
+    }else{
+      likeli<- -0.5*(log(det(V))+log(det(t(X_aktuell)%*%chol2inv(chol(V))%*%X_aktuell))+t(Eta_tilde-X%*%Betadach)%*%chol2inv(chol(V))%*%(Eta_tilde-X%*%Betadach))
+    }}else{
+      likeli<- -1e+20
+    }
+  ret.obj<- -likeli
+  ret.obj
+  return(ret.obj)
+}
 #############################################################################################################################################               
 ###################################################### main boosting function #################################################################
 est.bGLMM<-function(fix,rnd,data,family=gaussian(link = "identity"),control=list())
@@ -11,47 +248,39 @@ X <- model.matrix(fix, data)
 if(dim(X)[2]==1 || (dim(X)[2]==2 && colnames(X)[1]=="(Intercept)"))
 stop("No terms to select! Use glmer, glmmPQL or glmmML!")
 
-
-if(all(substr(very.old.names,1,9)!="as.factor"))
-very.old.names<-colnames(X)[colnames(X)!="(Intercept)"]
-
-fix.part<-very.old.names[1]
-if(length(very.old.names)>1)
-{
-for(iu in 2:length(very.old.names))
-fix.part<-paste(fix.part,very.old.names[iu],sep=" + ")
-}
-fix<-formula(paste("y~",fix.part,sep=" "))
-
-
-factor.names<-character()
-for (i in 1:length(very.old.names))
-{
-if (substr(very.old.names[i],1,9)=="as.factor")
-factor.names<-c(factor.names,very.old.names[i])
-}
-
-factor.list<-list()
-if(length(factor.names)>0)
-{
-spl<-strsplit(factor.names,"\\(")
-
-categ.names<-character()
-for(uz in 1:length(spl))
-categ.names<-c(categ.names,spl[[uz]][2])
-
-spl2<-strsplit(categ.names,"\\)")
-categ.names2<-character()
-for(uz in 1:length(spl2))
-categ.names2<-c(categ.names2,spl2[[uz]])
-factor.names<-categ.names2
-
-for (i in 1:length(factor.names))
-factor.list[[i]]<-levels(as.factor(data[,factor.names[i]]))
-}    
-
+icept.present<-is.element("(Intercept)",colnames(X))
 
 old.names<-attr(X,"dimnames")[[2]]
+
+control<-do.call(bGLMMControl, control)
+
+if(control$print.iter)
+  print(paste("Iteration ", 1,sep=""))
+
+add.icept<-FALSE
+
+if(icept.present && !is.element("(Intercept)",control$lin))
+{
+  add.icept<-TRUE
+  control$lin<-c("(Intercept)",control$lin)  
+}
+
+if (all (X==0))
+{
+  X<-rep(1,N)
+  X<-as.matrix(X)
+}
+
+# add Intercept 
+warn.ind<-FALSE
+if (!all (X[,1]==1) && is.element("(Intercept)",control$lin))
+{
+  fix<-update(fix,~ .+1)
+  warn.ind<-TRUE
+  very.old.names<-attr(terms(fix),"term.labels")
+  X <- model.matrix(fix, data)
+  old.names<-attr(X,"dimnames")[[2]]
+}
 
 rndformula <- as.character(rnd)
 
@@ -86,8 +315,6 @@ W<-W_start
 }
 
 
-print(paste("Iteration ", 1,sep=""))
-control<-do.call(bGLMMControl, control)
 
 if(sum(substr(control$lin,1,9)=="as.factor")>0)
 {
@@ -101,11 +328,8 @@ control$lin<-c(control$lin,old.names[is.element(substr(old.names,1,nchar(spl0[[u
 
 
 
-if(length(control$lin)>1)
-{
-lin.out<-!is.element(very.old.names,control$lin[2:length(control$lin)])
+lin.out<-!is.element(very.old.names,control$lin[1:length(control$lin)])
 very.old.names<-very.old.names[lin.out]
-}
 
 
 group<-substr(very.old.names,1,9)=="as.factor"
@@ -153,22 +377,6 @@ ranef_null<-control$start[(length(control$lin)+1):(length(control$lin)+n*s)]
 q_start<-control$q_start
 
 N<-length(y)
-if (all (X==0))
-{
-X<-rep(1,N)
-X<-as.matrix(X)
-}
-
-# add Intercept 
-warn.ind<-FALSE
-
-if (!all (X[,1]==1))
-{
-warn.ind<-TRUE
-X<-cbind(1,X)
-colnames(X)[1]<-"(Intercept)"
-old.names<-c("(Intercept)",old.names)
-}
 
 Z_fastalles<-X
 
@@ -464,7 +672,7 @@ X_aktuell<-Z_fastalles[,aktuell_vec]
 
 if(s==1)
 {
-optim.obj<-bobyqa(sqrt(Q_start),likelihood_bobyqa,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,Betadach=Betadach,W=W, model="no.model",  lower = 1e-14, upper = 20)
+optim.obj<-nlminb(sqrt(Q_start),likelihood_bobyqa,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,Betadach=Betadach,W=W,lower = 1e-14, upper = 20)
 Q1<-as.matrix(optim.obj$par)^2
 }else{
 q_start_vec<-c(diag(q_start),q_start[lower.tri(q_start)])
@@ -472,7 +680,7 @@ up1<-min(20,50*max(q_start_vec))#[(s+1):(s*(s+1)*0.5)]))
 upp<-rep(up1,length(q_start_vec))
 low<-c(rep(0,s),rep(-up1,0.5*(s^2-s)))
 kkk_vec<-c(rep(-1,s),rep(0.5,0.5*(s^2-s)))
-optim.obj<-try(bobyqa(q_start_vec,likelihood,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,s=s,k=k,Betadach=Betadach,W=W, model="no.model", lower=low,upper=upp))
+optim.obj<-try(bobyqa(q_start_vec,likelihood,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,s=s,k=k,Betadach=Betadach,W=W,lower=low,upper=upp))
 Q1<-matrix(0,s,s)
 Q1[lower.tri(Q1)]<-optim.obj$par[(s+1):(s*(s+1)*0.5)]
 Q1<-Q1+t(Q1)
@@ -522,10 +730,10 @@ if(control$steps!=1)
 {
 for (l in 2:control$steps)
 {
+
+if(control$print.iter)
 print(paste("Iteration ", l,sep=""))
-
-
-
+ 
 if(s==1)
 {
 P_alles<-c(rep(0,lin+m_alt),rep((Q1^(-1)),n*s))
@@ -697,11 +905,11 @@ X_aktuell<-Z_fastalles[,aktuell_vec]
 
 if(s==1)
 {        
-optim.obj<-try(bobyqa(sqrt(Q1),likelihood_bobyqa,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,Betadach=Betadach,W=W, model="no.model",  lower = 1e-12, upper = 20))
+optim.obj<-try(nlminb(sqrt(Q1),likelihood_bobyqa,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,Betadach=Betadach,W=W, lower = 1e-12, upper = 20))
 Q1<-as.matrix(optim.obj$par)^2
 }else{
 Q1_vec<-c(diag(Q1),Q1[lower.tri(Q1)])
-optim.obj<-try(bobyqa(Q1_vec,likelihood,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,s=s,k=k,Betadach=Betadach,W=W, model="no.model", lower=low,upper=upp))
+optim.obj<-try(bobyqa(Q1_vec,likelihood,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,s=s,k=k,Betadach=Betadach,W=W, lower=low,upper=upp))
 
 Q1<-matrix(0,s,s)
 Q1[lower.tri(Q1)]<-optim.obj$par[(s+1):(s*(s+1)*0.5)]
@@ -843,13 +1051,9 @@ Qfinal<-as.matrix(Qfinal)
 colnames(Qfinal)<-random.labels
 rownames(Qfinal)<-random.labels
 
-names(Delta_neu)[1]<-"(Intercept)"
-names(Standard_errors)[1]<-"(Intercept)"
-if(lin>1)
-{
-names(Delta_neu)[2:lin]<-colnames(X)[2:lin]
-names(Standard_errors)[2:lin]<-colnames(X)[2:lin]
-}
+names(Delta_neu)[1:lin]<-colnames(X)[1:lin]
+names(Standard_errors)[1:lin]<-colnames(X)[1:lin]
+
 names(Delta_neu)[(lin+1):(lin+m_alt)]<-colnames(U)
 names(Standard_errors)[(lin+1):(lin+m_alt)]<-colnames(U)
 
@@ -877,8 +1081,24 @@ for(oi in 1:length(komp))
 comp<-c(comp,very.old.names[komp[oi]])
 
 if(warn.ind)
-{cat("Warning:\n")
-cat("Intercept has to be incorporated and is added!\n")}
+{
+  if(lin==1)
+  {
+    cat("Warning:\n")
+    cat("At least one unpenalized component has to be incorporated - 
+      intercept is added!\n")
+  }else{
+    cat("Warning:\n")   
+    cat("Intercept is added to the formula as it is specified in the control argument!\n")
+    
+  }
+}
+
+if(add.icept)
+{
+  cat("Warning:\n")
+  cat("Intercept is added to unpenalized component!\n")
+}  
 
 
 ret.obj=list()
@@ -901,8 +1121,6 @@ ret.obj$fix<-fix
 ret.obj$newrndfrml<-newrndfrml
 ret.obj$subject<-names(rnd)[1]
 ret.obj$data<-data
-ret.obj$factor.names<-factor.names
-ret.obj$factor.list<-factor.list
 return(ret.obj)
 }
 
@@ -972,13 +1190,6 @@ if(is.null(newdata))
 y<-fitted(object)
 }else{                   
 family<-object$family
-
-if(length(object$factor.names>0))
-{
-for (i in 1:length(object$factor.names))
-{
-newdata[,object$factor.names[i]]<-factor(newdata[,object$factor.names[i]],levels=object$factor.list[[i]])
-}}
 
 X <- model.matrix(object$fix, newdata)
 

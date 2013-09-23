@@ -66,11 +66,13 @@ Tutz, G. and A. Groll (2012). Likelihood-based boosting in binary and ordinal ra
 data(knee)
 
 # fit a sequential model
+# (here only one step is performed in order to
+# save computational time)
 
 glm1 <- OrdinalBoost(pain ~ time + th + age + sex, rnd = list(id=~1),
-        data = knee, model = "sequential", control = list(steps=3))
+        data = knee, model = "sequential", control = list(steps=1))
 
-# see also demo("OrdinalBoost-knee")
+# see also demo("OrdinalBoost-knee") for more extensive examples
 }              
 \keyword{models}
 \keyword{methods}

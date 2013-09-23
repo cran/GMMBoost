@@ -1,4 +1,5 @@
 importFrom(minqa, bobyqa)   
+importFrom(magic, adiag)   
 import(stats)
 S3method(print, bGLMM)
 S3method(summary, bGLMM)

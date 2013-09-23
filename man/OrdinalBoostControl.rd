@@ -7,8 +7,9 @@
 }
 
 \usage{
-OrdinalBoostControl(nue=0.1,lin=NULL,katvar=NULL,start=NULL,q_start=NULL, OPT=TRUE, 
-                    sel.method="aic",steps=100,method="EM",maxIter=500)
+OrdinalBoostControl(nue=0.1, lin=NULL, katvar=NULL, start=NULL, q_start=NULL, 
+                    OPT=TRUE, sel.method="aic", steps=100, method="EM", maxIter=500,
+                    print.iter.final=FALSE, eps.final=1e-5)
 } 
     
 \arguments{
@@ -24,6 +25,8 @@ OrdinalBoostControl(nue=0.1,lin=NULL,katvar=NULL,start=NULL,q_start=NULL, OPT=TR
   \item{method}{two methods for the computation of the random-effects variance-covariance parameter estimates can be chosen, an EM-type estimate and an REML-type estimate. The REML-type estimate uses the \code{bobyqa} function for optimization.
   Default is \code{EM}.}
   \item{maxIter}{the number of interations for the final Fisher scoring reestimation procedure. Default is 500.}
+    \item{print.iter.final}{logical. Should the number of interations in the final re-estimation step be printed?. Default is FALSE.}
+\item{eps.final}{controls the speed of convergence in the final re-estimation. Default is 1e-5.}
 }
 
 \value{

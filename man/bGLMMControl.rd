@@ -8,7 +8,8 @@
 
 \usage{
 bGLMMControl(nue=0.1, lin="(Intercept)", start=NULL, q_start=NULL, OPT=TRUE,  
-             sel.method="aic", steps=500, method="EM",overdispersion=FALSE)
+             sel.method="aic", steps=500, method="EM",
+             overdispersion=FALSE,print.iter=TRUE)
 } 
     
 \arguments{
@@ -24,6 +25,8 @@ bGLMMControl(nue=0.1, lin="(Intercept)", start=NULL, q_start=NULL, OPT=TRUE,
   Default is \code{EM}.}
   \item{overdispersion}{logical scalar. If \code{FALSE}, no scale parameter is derived, if \code{TRUE}, in each boosting iteration a scale parameter is estimated by use of Pearson residuals. 
   This can be used to fit overdispersed Poisson models. Default is \code{FALSE}.}
+    \item{print.iter}{logical. Should the number of interations be printed?. Default is TRUE.}
+  
 }
 
 \value{

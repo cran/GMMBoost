@@ -476,7 +476,7 @@ X_aktuell<-Z_fastalles[,aktuell_vec]
 
 if(s==1)
 {
-optim.obj<-bobyqa(sqrt(Q_start),likelihood_bobyqa,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,Betadach=Betadach,W=W, model="no.model",  lower = 1e-14, upper = 20)
+optim.obj<-nlminb(sqrt(Q_start),likelihood_bobyqa,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,Betadach=Betadach,W=W, model="no.model",  lower = 1e-14, upper = 20)
 Q1<-as.matrix(optim.obj$par)^2
 }else{
 q_start_vec<-c(diag(q_start),q_start[lower.tri(q_start)])
@@ -665,7 +665,7 @@ X_aktuell<-Z_fastalles[,aktuell_vec]
 
 if(s==1)
 {
-optim.obj<-try(bobyqa(sqrt(Q1),likelihood_bobyqa,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,Betadach=Betadach,W=W, model="no.model",  lower = 1e-12, upper = 20))
+optim.obj<-try(nlminb(sqrt(Q1),likelihood_bobyqa,D=D,Sigma=Sigma,X=Z_fastalles,X_aktuell=X_aktuell,Eta_tilde=Eta_tilde,n=n,Betadach=Betadach,W=W, model="no.model",  lower = 1e-12, upper = 20))
 Q1<-as.matrix(optim.obj$par)^2
 }else{
 Q1_vec<-c(diag(Q1),Q1[lower.tri(Q1)])
