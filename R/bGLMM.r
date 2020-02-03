@@ -362,6 +362,8 @@ for(ip in 1:length(group))
 block<-rep(1,length(group))  
 }
 
+#browser()
+
 if(length(control$start)==0)
 control$start<-c(rep(0,(length(control$lin)+n*s)))
 
@@ -573,57 +575,57 @@ g<-c(rep(T,lin),is.element(grp,1:blocksum[1]),rep(T,s*n))
 g<-c(rep(T,lin),is.element(grp,(blocksum[mi_ic-1]+1):blocksum[mi_ic]),rep(T,s*n))
 }
 
-Delta_r[[mi_ic]][(lin+1):(lin+block[mi_ic])]<-control$nue*Delta_r[[mi_ic]][(lin+1):(lin+block[mi_ic])]
-Delta[1,g]<-Delta[1,g]+t(Delta_r[[mi_ic]])
+#Delta_r[[mi_ic]][(lin+1):(lin+block[mi_ic])]<-control$nue*Delta_r[[mi_ic]][(lin+1):(lin+block[mi_ic])]
+Delta[1,g] <- Delta[1,g] + control$nue*t(Delta_r[[mi_ic]])
 
-Nue_ma<-c(rep(1,lin),rep(control$nue,block[mi_ic]),rep(1,s*n))
+Nue_ma <- c(rep(control$nue,lin),rep(control$nue,block[mi_ic]),rep(control$nue,s*n))
 
-Uu<-(E-(cbind(Z_r[[mi_ic]],W)*sqrt(Sigma*D*1/Sigma*D))%*%(Inv_r[[mi_ic]]*Nue_ma)%*%t(cbind(Z_r[[mi_ic]],W)*sqrt(D*1/Sigma*D*1/Sigma)))%*%(E-M0)
-FinalHat[[1]]<-E-Uu
+Uu <- (E-(cbind(Z_r[[mi_ic]],W)*sqrt(Sigma*D*1/Sigma*D))%*%(Inv_r[[mi_ic]]*Nue_ma)%*%t(cbind(Z_r[[mi_ic]],W)*sqrt(D*1/Sigma*D*1/Sigma)))%*%(E-M0)
+FinalHat[[1]] <- E-Uu
 
-defre<-sum(diag(FinalHat[[1]]))
+defre <- sum(diag(FinalHat[[1]]))
 
-komp[1]<-mi_ic
+komp[1] <- mi_ic
 
 if(mi_ic==1)
 {
-X1<-cbind(X,as.matrix(U[,1:block[1]]))
+X1 <- cbind(X,as.matrix(U[,1:block[1]]))
 }else{
-X1<-cbind(X,as.matrix(U[,(blocksum[mi_ic-1]+1):blocksum[mi_ic]]))
+X1 <- cbind(X,as.matrix(U[,(blocksum[mi_ic-1]+1):blocksum[mi_ic]]))
 }
 
 
 if(s==1)
 {
-PP<-rep((Q_start^(-1)),n*s)
-PP<-diag(PP)
+PP <- rep((Q_start^(-1)),n*s)
+PP <- diag(PP)
 }else{
-PP<-matrix(0,n*s,n*s)
+PP <- matrix(0,n*s,n*s)
 for(jf in 1:n)
-PP[((jf-1)*s+1):(jf*s),((jf-1)*s+1):(jf*s)]<-chol2inv(chol(Q_start))
+PP[((jf-1)*s+1):(jf*s),((jf-1)*s+1):(jf*s)] <- chol2inv(chol(Q_start))
 }
 
 
-R1<-chol2inv(chol((t(X1)%*%(X1*D*1/Sigma*D))-(t(X1)%*%(W*D*1/Sigma*D)%*%chol2inv(chol(t(W)%*%(W*D*1/Sigma*D)+PP))%*%t(t(X1)%*%(W*D*1/Sigma*D)))))
-R2<-(t(X1*D*1/Sigma)-(t(X1)%*%(W*D*1/Sigma*D)%*%chol2inv(chol(t(W)%*%(W*D*1/Sigma*D)+PP)))%*%t(W*D*1/Sigma))
+R1 <- chol2inv(chol((t(X1)%*%(X1*D*1/Sigma*D))-(t(X1)%*%(W*D*1/Sigma*D)%*%chol2inv(chol(t(W)%*%(W*D*1/Sigma*D)+PP))%*%t(t(X1)%*%(W*D*1/Sigma*D)))))
+R2 <- (t(X1*D*1/Sigma)-(t(X1)%*%(W*D*1/Sigma*D)%*%chol2inv(chol(t(W)%*%(W*D*1/Sigma*D)+PP)))%*%t(W*D*1/Sigma))
 
-Q_mi<-control$nue*R1[(lin+block[mi_ic]):(lin+block[mi_ic]),]%*%R2%*%(E-M0)
+Q_mi <- control$nue*R1[(lin+block[mi_ic]):(lin+block[mi_ic]),]%*%R2%*%(E-M0)
 
-Standard_ma[[mi_ic]]<-Q_mi
+Standard_ma[[mi_ic]] <- Q_mi
 
 if(mi_ic==1)
 {
-Standard[1,(lin+1):(lin+blocksum[1])]<-sqrt(diag(Standard_ma[[1]]%*%t(Standard_ma[[1]]*Sigma)))
+Standard[1,(lin+1):(lin+blocksum[1])] <- sqrt(diag(Standard_ma[[1]]%*%t(Standard_ma[[1]]*Sigma)))
 }else{
-Standard[1,(lin+blocksum[mi_ic-1]+1):(lin+blocksum[mi_ic])]<-sqrt(diag(Standard_ma[[mi_ic]]%*%t(Standard_ma[[mi_ic]]*Sigma)))
+Standard[1,(lin+blocksum[mi_ic-1]+1):(lin+blocksum[mi_ic])] <- sqrt(diag(Standard_ma[[mi_ic]]%*%t(Standard_ma[[mi_ic]]*Sigma)))
 }   
-Eta<-Z_alles%*%Delta[1,]
+Eta <- Z_alles%*%Delta[1,]
 
-Mu<-as.vector(family$linkinv(Eta))
+Mu <- as.vector(family$linkinv(Eta))
 
-Sigma<-as.vector(family$variance(Mu))
+Sigma <- as.vector(family$variance(Mu))
 
-D<-as.vector(family$mu.eta(Eta))
+D <- as.vector(family$mu.eta(Eta))
 
 
 if (control$method=="EM")
@@ -692,7 +694,7 @@ diag(Q1)<-(optim.obj$par[1:s])
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
       Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
          break
       }
 }
@@ -791,51 +793,51 @@ F_alles<-t(Z_alles)%*%(Z_alles*D*1/Sigma*D)+P_alles
    
    if(mi_ic==1)   
    {
-   g<-c(rep(T,lin),is.element(grp,1:blocksum[1]),rep(T,s*n))
+   g <- c(rep(T,lin),is.element(grp,1:blocksum[1]),rep(T,s*n))
    }else{
-   g<-c(rep(T,lin),is.element(grp,(blocksum[mi_ic-1]+1):blocksum[mi_ic]),rep(T,s*n))
+   g <- c(rep(T,lin),is.element(grp,(blocksum[mi_ic-1]+1):blocksum[mi_ic]),rep(T,s*n))
    }
    
-   Delta[l,]<-Delta[l-1,]
+   Delta[l,] <- Delta[l-1,]
 
-   Delta_r[[mi_ic]][(lin+1):(lin+block[mi_ic])]<-control$nue*Delta_r[[mi_ic]][(lin+1):(lin+block[mi_ic])]
-   Delta[l,g]<-Delta[l,g]+t(Delta_r[[mi_ic]])                                                      
+   #Delta_r[[mi_ic]][(lin+1):(lin+block[mi_ic])]<-control$nue*Delta_r[[mi_ic]][(lin+1):(lin+block[mi_ic])]
+   Delta[l,g] <- Delta[l,g] + control$nue*t(Delta_r[[mi_ic]])                                                      
 
-komp[l]<-mi_ic
+komp[l] <- mi_ic
 
-Nue_ma<-c(rep(1,lin),rep(control$nue,block[mi_ic]),rep(1,s*n))
+Nue_ma <- c(rep(control$nue,lin),rep(control$nue,block[mi_ic]),rep(control$nue,s*n))
 
-Uu<-(E-((cbind(Z_r[[mi_ic]],W)*sqrt(Sigma*D*1/Sigma*D))%*%(Inv_r[[mi_ic]]*Nue_ma)%*%t(cbind(Z_r[[mi_ic]],W)*sqrt(D*1/Sigma*D*1/Sigma))))%*%Uu
-FinalHat[[l]]<-E-Uu
-defre<-sum(diag(FinalHat[[l]]))
+Uu <- (E-((cbind(Z_r[[mi_ic]],W)*sqrt(Sigma*D*1/Sigma*D))%*%(Inv_r[[mi_ic]]*Nue_ma)%*%t(cbind(Z_r[[mi_ic]],W)*sqrt(D*1/Sigma*D*1/Sigma))))%*%Uu
+FinalHat[[l]] <- E-Uu
+defre <- sum(diag(FinalHat[[l]]))
   
 if(mi_ic==1)
 {
-X1<-cbind(X,as.matrix(U[,1:block[1]]))
+X1 <- cbind(X,as.matrix(U[,1:block[1]]))
 }else{
-X1<-cbind(X,as.matrix(U[,(blocksum[mi_ic-1]+1):blocksum[mi_ic]]))
+X1 <- cbind(X,as.matrix(U[,(blocksum[mi_ic-1]+1):blocksum[mi_ic]]))
 }
 
 if(s==1)
 {
-PP<-rep((Q1^(-1)),n*s)
-PP<-diag(PP)
+PP <- rep((Q1^(-1)),n*s)
+PP <- diag(PP)
 }else{
-PP<-matrix(0,n*s,n*s)
+PP <- matrix(0,n*s,n*s)
 for(jf in 1:n)
-PP[((jf-1)*s+1):(jf*s),((jf-1)*s+1):(jf*s)]<-chol2inv(chol(Q1))
+PP[((jf-1)*s+1):(jf*s),((jf-1)*s+1):(jf*s)] <- chol2inv(chol(Q1))
 }
 
-R1<-chol2inv(chol((t(X1)%*%(X1*D*1/Sigma*D))-(t(X1)%*%(W*D*1/Sigma*D)%*%chol2inv(chol(t(W)%*%(W*D*1/Sigma*D)+PP))%*%t(t(X1)%*%(W*D*1/Sigma*D)))))
-R2<-(t(X1*D*1/Sigma)-(t(X1)%*%(W*D*1/Sigma*D)%*%chol2inv(chol(t(W)%*%(W*D*1/Sigma*D)+PP)))%*%t(W*D*1/Sigma))
+R1 <- chol2inv(chol((t(X1)%*%(X1*D*1/Sigma*D))-(t(X1)%*%(W*D*1/Sigma*D)%*%chol2inv(chol(t(W)%*%(W*D*1/Sigma*D)+PP))%*%t(t(X1)%*%(W*D*1/Sigma*D)))))
+R2 <- (t(X1*D*1/Sigma)-(t(X1)%*%(W*D*1/Sigma*D)%*%chol2inv(chol(t(W)%*%(W*D*1/Sigma*D)+PP)))%*%t(W*D*1/Sigma))
 
-Q_mi<-control$nue*R1[(lin+block[mi_ic]):(lin+block[mi_ic]),]%*%R2%*%(E-FinalHat[[l-1]])
+Q_mi <- control$nue*R1[(lin+block[mi_ic]):(lin+block[mi_ic]),]%*%R2%*%(E-FinalHat[[l-1]])
    
     if(is.matrix(Standard_ma[[mi_ic]]))
     {
-    Standard_ma[[mi_ic]]<-Standard_ma[[mi_ic]]+Q_mi
+    Standard_ma[[mi_ic]] <- Standard_ma[[mi_ic]]+Q_mi
     }else{
-    Standard_ma[[mi_ic]]<-Q_mi
+    Standard_ma[[mi_ic]] <- Q_mi
     }
 
     for(jh in as.numeric(levels(as.factor(komp[1:l])))[as.numeric(levels(as.factor(komp[1:l])))!=0])
@@ -849,13 +851,13 @@ Q_mi<-control$nue*R1[(lin+block[mi_ic]):(lin+block[mi_ic]),]%*%R2%*%(E-FinalHat[
 
 
           
-Eta<-Z_alles%*%Delta[l,]
+Eta <- Z_alles%*%Delta[l,]
 
-Mu<-as.vector(family$linkinv(Eta))
+Mu <- as.vector(family$linkinv(Eta))
 
-Sigma<-as.vector(family$variance(Mu))
+Sigma <- as.vector(family$variance(Mu))
 
-D<-as.vector(family$mu.eta(Eta))
+D <- as.vector(family$mu.eta(Eta))
 
 
 
@@ -923,7 +925,7 @@ for (ttt in 0:100)
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
        Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
          break
       }
 }

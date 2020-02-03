@@ -1,6 +1,7 @@
 importFrom(minqa, bobyqa)   
 importFrom(magic, adiag)   
 import(stats)
+importFrom("graphics", "lines", "par", "plot", "rug")
 S3method(print, bGLMM)
 S3method(summary, bGLMM)
 S3method(predict, bGLMM)

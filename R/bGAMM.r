@@ -496,7 +496,7 @@ diag(Q1)<-(optim.obj$par[1:s])
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
       Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
          break
       }
 }}
@@ -682,7 +682,7 @@ for (ttt in 0:100)
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
        Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
          break
       }
 }}

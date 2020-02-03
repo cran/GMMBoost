@@ -810,7 +810,7 @@ diag(Q1)<-(optim.obj$par[1:s])
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
       Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
          break
       }
 }}
@@ -885,7 +885,7 @@ Sig1<-list()
 Solve_test<-try(chol2inv(chol(Sigma)))
 
 kek<-0
-while(class(Solve_test)=="try-error")
+while(class(Solve_test)[1]=="try-error")
 {
   Delta[l,]<-Delta[l-1,]+(0.9^(kek+1))*Delta_r
 
@@ -943,7 +943,7 @@ for (ttt in 0:100)
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
        Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
          break
       }
 }}
@@ -1094,7 +1094,7 @@ glmm_final_seq<-function(y,X,W,k,q_start,Delta_start,s,steps=1000,
         Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
         Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
         Q_solvetest<-try(solve(Q1))
-        if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+        if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
           break
       }
     }}
@@ -1175,7 +1175,7 @@ glmm_final_seq<-function(y,X,W,k,q_start,Delta_start,s,steps=1000,
           Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
           Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
           Q_solvetest<-try(solve(Q1))
-          if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+          if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
             break
         }
       }}
@@ -1705,7 +1705,7 @@ diag(Q1)<-(optim.obj$par[1:s])
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
       Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
          break
       }
 }
@@ -1903,7 +1903,7 @@ for (ttt in 0:100)
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
        Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
          break
       }
 }
@@ -2467,7 +2467,7 @@ est.OrdinalBoost.seq<-function(fix,rnd,data,control=list())
         Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
         Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
         Q_solvetest<-try(solve(Q1))
-        if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+        if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
           break
       }
     }
@@ -2625,7 +2625,7 @@ est.OrdinalBoost.seq<-function(fix,rnd,data,control=list())
             Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
             Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
             Q_solvetest<-try(solve(Q1))
-            if(all (eigen(Q1)$values>0) & class(Q_solvetest)!="try-error")
+            if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
               break
           }
         }

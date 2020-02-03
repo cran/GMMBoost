@@ -2,17 +2,17 @@
 \alias{GMMBoost}
 \docType{package}
 \title{
-Likelihood-based Boosting for Generalized mixed models
+Likelihood-Based Boosting for Generalized Mixed Models
 }
 \description{
-Likelihood-based Boosting for Generalized mixed models
+This packages provides likelihood-based boosting approaches for Generalized mixed models
 }
 \details{
 \tabular{ll}{
 Package: \tab GMMBoost\cr
 Type: \tab Package\cr
-Version: \tab 1.1.2\cr
-Date: \tab 2013-11-22\cr
+Version: \tab 1.1.3\cr
+Date: \tab 2019-02-03\cr
 License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }
@@ -21,9 +21,11 @@ for loading a dataset type data(nameofdataset)
 \author{
 Andreas Groll
 }
-\keyword{
-Boosting, Variable selection, Generalized linear mixed model, Generalized additive mixed model
-}
+\concept{Boosting}
+\concept{Variable selection}
+\concept{Generalized linear mixed model}
+\concept{Generalized additive mixed model}
+
 \seealso{
 \code{\link{bGLMM},\link{OrdinalBoost},\link{bGAMM}}
 }

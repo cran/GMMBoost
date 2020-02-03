@@ -29,6 +29,6 @@ in Logit-Modellierung und kategoriale Regression}. Muenchen: Oldenbourg Verlag.
 Tutz, G. and A. Groll (2011). Binary and ordinal random effects models including variable
 selection. Technical Report \bold{97}, Ludwig-Maximilians-University.}
 \seealso{
-  \code{\link{OrdinalBoost}}.
+  \code{\link{OrdinalBoost}}, \code{\link[glmmLasso]{glmmLasso}}.
 }
 \keyword{datasets}

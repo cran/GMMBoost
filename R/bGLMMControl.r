@@ -1,4 +1,5 @@
-bGLMMControl<-function(nue=0.1,lin="(Intercept)",start=NULL,q_start=NULL, OPT=TRUE,sel.method="aic",steps=500,method="EM",overdispersion=FALSE,print.iter=TRUE)
+bGLMMControl<-function(nue=0.1,lin="(Intercept)",start=NULL,q_start=NULL, 
+                       OPT=TRUE,sel.method="aic",steps=500,method="EM",overdispersion=FALSE,print.iter=TRUE)
 {                       
 if (is.null(lin))
 stop("At least one unpenalized component has to be incorporated!")
