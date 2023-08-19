@@ -810,7 +810,7 @@ diag(Q1)<-(optim.obj$par[1:s])
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
       Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
+         if(all (eigen(Q1)$values>0) & !inherits(class(Q_solvetest)[1],"try-error"))
          break
       }
 }}
@@ -885,7 +885,7 @@ Sig1<-list()
 Solve_test<-try(chol2inv(chol(Sigma)))
 
 kek<-0
-while(class(Solve_test)[1]=="try-error")
+while(inherits(class(Solve_test)[1],"try-error"))
 {
   Delta[l,]<-Delta[l-1,]+(0.9^(kek+1))*Delta_r
 
@@ -943,7 +943,7 @@ for (ttt in 0:100)
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
        Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
+         if(all (eigen(Q1)$values>0) & !inherits(class(Q_solvetest)[1],"try-error"))
          break
       }
 }}
@@ -1094,7 +1094,7 @@ glmm_final_seq<-function(y,X,W,k,q_start,Delta_start,s,steps=1000,
         Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
         Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
         Q_solvetest<-try(solve(Q1))
-        if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
+        if(all (eigen(Q1)$values>0) & !inherits(class(Q_solvetest)[1],"try-error"))
           break
       }
     }}
@@ -1175,7 +1175,7 @@ glmm_final_seq<-function(y,X,W,k,q_start,Delta_start,s,steps=1000,
           Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
           Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
           Q_solvetest<-try(solve(Q1))
-          if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
+          if(all (eigen(Q1)$values>0) & !inherits(class(Q_solvetest)[1],"try-error"))
             break
         }
       }}
@@ -1705,7 +1705,7 @@ diag(Q1)<-(optim.obj$par[1:s])
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
       Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
+         if(all (eigen(Q1)$values>0) & !inherits(class(Q_solvetest)[1],"try-error"))
          break
       }
 }
@@ -1903,7 +1903,7 @@ for (ttt in 0:100)
       Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
       Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
        Q_solvetest<-try(solve(Q1))
-         if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
+         if(all (eigen(Q1)$values>0) & !inherits(class(Q_solvetest)[1],"try-error"))
          break
       }
 }
@@ -1965,14 +1965,14 @@ glmm_final<-try(glmm_final_cumul(y,Z_fastalles[,aaa],W,k,q_start=Qfinal,
                                  katvar=katvar,print.iter.final=control$print.iter.final,
                                  eps.final=control$eps.final))
 
-if(class(glmm_final)=="try-error" || glmm_final$opt>(control$maxIter-5))
+if(inherits(class(glmm_final),"try-error") || glmm_final$opt>(control$maxIter-5))
 {
 glmm_final<-try(glmm_final_cumul(y,Z_fastalles[,aaa],W,k,q_start=q_start,
                                  Delta_start=Delta_start[c(aaa,rep(T,n*s))],s,
                                  steps=2000,method=method,kat=kat,katvar=katvar,
                                  print.iter.final=control$print.iter.final,eps.final=control$eps.final))
 
-if(class(glmm_final)=="try-error" || glmm_final$opt>1990)
+if(inherits(class(glmm_final),"try-error") || glmm_final$opt>1990)
 {
 cat("Warning:\n")
 cat("Final Fisher scoring reestimation did not converge!")
@@ -2467,7 +2467,7 @@ est.OrdinalBoost.seq<-function(fix,rnd,data,control=list())
         Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
         Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
         Q_solvetest<-try(solve(Q1))
-        if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
+        if(all (eigen(Q1)$values>0) & !inherits(class(Q_solvetest)[1],"try-error"))
           break
       }
     }
@@ -2625,7 +2625,7 @@ est.OrdinalBoost.seq<-function(fix,rnd,data,control=list())
             Q1[lower.tri(Q1)]<-((0.5)^ttt)*Q1[lower.tri(Q1)]
             Q1[upper.tri(Q1)]<-((0.5)^ttt)*Q1[upper.tri(Q1)]
             Q_solvetest<-try(solve(Q1))
-            if(all (eigen(Q1)$values>0) & class(Q_solvetest)[1]!="try-error")
+            if(all (eigen(Q1)$values>0) & !inherits(class(Q_solvetest)[1],"try-error"))
               break
           }
         }
@@ -2687,7 +2687,7 @@ est.OrdinalBoost.seq<-function(fix,rnd,data,control=list())
                                  katvar=katvar,print.iter.final=control$print.iter.final,
                                  eps.final=control$eps.final))
         
-        if(class(glmm_final)=="try-error" || glmm_final$opt>(control$maxIter-5))
+        if(inherits(class(glmm_final),"try-error") || glmm_final$opt>(control$maxIter-5))
         {
           glmm_final<-try(glmm_final_seq(y,Z_fastalles[,aaa],W,k,q_start=q_start,
                                          Delta_start=Delta_start[c(aaa,rep(T,n*s))],
@@ -2695,7 +2695,7 @@ est.OrdinalBoost.seq<-function(fix,rnd,data,control=list())
                                          katvar=katvar,print.iter.final=control$print.iter.final,
                                          eps.final=control$eps.final))
           
-          if(class(glmm_final)=="try-error" || glmm_final$opt>1990)
+          if(inherits(class(glmm_final),"try-error") || glmm_final$opt>1990)
           {
             cat("Warning:\n")
             cat("Final Fisher scoring reestimation did not converge!")

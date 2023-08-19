@@ -314,7 +314,8 @@ W<-cbind(W,W_start[,seq(from=i,to=i+(s-1)*n,by=n)])
 W<-W_start
 }
 
-
+lin.out<-!is.element(very.old.names,control$lin[1:length(control$lin)])
+very.old.names<-very.old.names[lin.out]
 
 if(sum(substr(control$lin,1,9)=="as.factor")>0)
 {
@@ -325,12 +326,6 @@ control$lin<-control$lin[!group0]
 for(ur in 1:length(spl0))
 control$lin<-c(control$lin,old.names[is.element(substr(old.names,1,nchar(spl0[[ur]])),spl0[[ur]])])
 }
-
-
-
-lin.out<-!is.element(very.old.names,control$lin[1:length(control$lin)])
-very.old.names<-very.old.names[lin.out]
-
 
 group<-substr(very.old.names,1,9)=="as.factor"
 

@@ -34,7 +34,7 @@ a list with components for each of the possible arguments.
 }
 
 \author{
-Andreas Groll \email{andreas.groll@stat.uni-muenchen.de}
+Andreas Groll \email{groll@statistik.tu-dortmund.de}
 }
 
 \seealso{

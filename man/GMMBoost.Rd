@@ -1,5 +1,6 @@
 \name{GMMBoost}
 \alias{GMMBoost}
+\alias{GMMBoost-package}
 \docType{package}
 \title{
 Likelihood-Based Boosting for Generalized Mixed Models
@@ -11,8 +12,8 @@ This packages provides likelihood-based boosting approaches for Generalized mixe
 \tabular{ll}{
 Package: \tab GMMBoost\cr
 Type: \tab Package\cr
-Version: \tab 1.1.3\cr
-Date: \tab 2019-02-03\cr
+Version: \tab 1.1.5\cr
+Date: \tab 2020-08-19\cr
 License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }
